@@ -57,7 +57,7 @@ react {
 /**
  * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
  */
-def enableProguardInReleaseBuilds = false
+def enableProguardInReleaseBuilds = true
 
 /**
  * The preferred build flavor of JavaScriptCore (JSC)
@@ -73,6 +73,21 @@ def enableProguardInReleaseBuilds = false
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('azysuvx.jks')
+            storePassword '123456'
+            keyAlias 'dvqnoajs'
+            keyPassword '123456'
+        }
+        release {
+            storeFile file('azysuvx.jks')
+            storePassword '123456'
+            keyAlias 'dvqnoajs'
+            keyPassword '123456'
+        }
+    }
+
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
@@ -85,15 +100,7 @@ android {
         versionCode 1
         versionName "1.0"
     }
-    signingConfigs {
-        debug {
-            storeFile file('debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
-        }
-    }
-    buildTypes {
+buildTypes {
         debug {
             signingConfig signingConfigs.debug
         }
