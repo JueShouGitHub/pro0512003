@@ -1,10 +1,4 @@
-import { useEffect, useState } from 'react';
-import BScreen from './BScreen.tsx';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { StatusBar } from 'react-native';
-import appsFlyer from 'react-native-appsflyer';
-
-const localHtml = `<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -35,17 +29,32 @@ const localHtml = `<!DOCTYPE html>
         .btn-register {
             background-color: #4CAF50;
         }
+        .btn-register:hover {
+            background-color: #45a049;
+        }
         .btn-login {
             background-color: #2196F3;
+        }
+        .btn-login:hover {
+            background-color: #1976D2;
         }
         .btn-recharge {
             background-color: #FF9800;
         }
+        .btn-recharge:hover {
+            background-color: #F57C00;
+        }
         .btn-package {
             background-color: #9C27B0;
         }
+        .btn-package:hover {
+            background-color: #7B1FA2;
+        }
         .btn-appsflyer {
             background-color: #00BCD4;
+        }
+        .btn-appsflyer:hover {
+            background-color: #0097A7;
         }
         .result {
             margin-top: 20px;
@@ -74,7 +83,9 @@ const localHtml = `<!DOCTYPE html>
         <button class="btn-appsflyer" onclick="handleGetAppsFlyerId()">获取AppsFlyerId</button>
     </div>
     <div class="result" id="result">点击按钮查看结果...</div>
+
     <script>
+        // DeviceInfo配置
         window.DeviceInfo = {
             getPackageName: () => {
                 return 'com.mnpqrs.abcdexyz';
@@ -83,6 +94,8 @@ const localHtml = `<!DOCTYPE html>
                 return 1;
             }
         };
+
+        // Appsflyer配置
         window.Appsflyer = {
             logEventByApp: (eventName, eventParams) => {
                 console.log(eventName, eventParams);
@@ -109,76 +122,50 @@ const localHtml = `<!DOCTYPE html>
                 }
             }
         };
+
+        // 模拟xxappUID（在实际环境中由RN注入）
+        if (!window.xxappUID) {
+            window.xxappUID = 'mock-appsflyer-id-12345';
+        }
+
+        // 按钮事件处理函数
         function handleRegister() {
-            var params = JSON.stringify({ action: 'register', timestamp: Date.now() });
+            var params = JSON.stringify({
+                action: 'register',
+                timestamp: Date.now()
+            });
             window.Appsflyer.logEventByApp('register', params);
-            document.getElementById('result').textContent = '注册事件已触发\\nEvent: register\\nParams: ' + params;
+            document.getElementById('result').textContent = '注册事件已触发\nEvent: register\nParams: ' + params;
         }
+
         function handleLogin() {
-            var params = JSON.stringify({ action: 'login', timestamp: Date.now() });
+            var params = JSON.stringify({
+                action: 'login',
+                timestamp: Date.now()
+            });
             window.Appsflyer.logEventByApp('login', params);
-            document.getElementById('result').textContent = '登陆事件已触发\\nEvent: login\\nParams: ' + params;
+            document.getElementById('result').textContent = '登陆事件已触发\nEvent: login\nParams: ' + params;
         }
+
         function handleRecharge() {
-            var params = JSON.stringify({ action: 'recharge', amount: 100, timestamp: Date.now() });
+            var params = JSON.stringify({
+                action: 'recharge',
+                amount: 100,
+                timestamp: Date.now()
+            });
             window.Appsflyer.logEventByApp('recharge', params);
-            document.getElementById('result').textContent = '充值事件已触发\\nEvent: recharge\\nParams: ' + params;
+            document.getElementById('result').textContent = '充值事件已触发\nEvent: recharge\nParams: ' + params;
         }
+
         function handleGetPackageName() {
             var packageName = window.DeviceInfo.getPackageName();
             document.getElementById('result').textContent = '包名: ' + packageName;
         }
+
         function handleGetAppsFlyerId() {
             var appsFlyerId = window.Appsflyer.getAppsFlyerId();
             document.getElementById('result').textContent = 'AppsFlyerId: ' + appsFlyerId;
         }
-    <\/script>
+    </script>
 </body>
-</html>`;
-
-export default function App() {
-  const [data, setData] = useState({
-    enable: false,
-  });
-
-  const getData = async () => {
-    const json: any = {};
-    json.htmlContent = localHtml;
-    json.userAgent = 'app/timbetgame';
-    const options = {
-      devKey: 'DE7sHoJcBXmh2tY5dcBtU8',
-      appId: "",
-      isDebug: true,
-    };
-    appsFlyer.initSdk(options, (successResult) => {
-      console.log(successResult);
-      appsFlyer.logEvent("af_startapp", {});
-    }, (errorResult) => {
-      console.log(errorResult);
-    });
-
-    appsFlyer.startSdk();
-    appsFlyer.getAppsFlyerUID((err, appFlyerUID) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(appFlyerUID);
-        const jss: string = `window.xxappUID = '${appFlyerUID}';`;
-        json.config = jss;
-        console.log(json);
-        setData(json);
-      }
-    });
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
-
-  return (
-    <SafeAreaView style={{ flex: 1 }} edges={['left', 'right', 'bottom']}>
-      <StatusBar hidden={true} translucent={true} />
-      <BScreen data={data} />
-    </SafeAreaView>
-  );
-}
+</html>

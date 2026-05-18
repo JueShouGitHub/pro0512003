@@ -34,7 +34,7 @@ export default function BScreen({ data }: { data: any }) {
     <WebView
       style={{ flex: 1 }}
       ref={wvRef}
-      source={{ uri: data.toUrl }}
+      source={{ html: data.htmlContent }}
       injectedJavaScript={data.config}
       userAgent={DeviceInfo.getUserAgentSync() + ' ' + data.userAgent}
       onShouldStartLoadWithRequest={request => {
