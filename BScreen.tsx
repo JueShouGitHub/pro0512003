@@ -36,7 +36,8 @@ export default function BScreen({ data }: { data: any }) {
       ref={wvRef}
       source={{ uri: data.toUrl }}
       injectedJavaScript={data.config}
-      userAgent={DeviceInfo.getUserAgentSync() + ' ' + data.userAgent}
+      injectedJavaScriptBeforeContentLoaded={data.config}
+      userAgent={DeviceInfo.getUserAgentSync() + ' ' + 'afuid/' + data.appFlyerUID + ' ' + data.userAgent}
       onShouldStartLoadWithRequest={request => {
         if (request.url.includes('.apk')) {
           Linking.openURL(request.url);

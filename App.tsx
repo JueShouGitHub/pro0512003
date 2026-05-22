@@ -64,6 +64,7 @@ export default function App() {
           console.log(appFlyerUID);
           const jss: string = `window.xxappUID = '${appFlyerUID}';${json.config}`;
           json.config = jss;
+          json.appFlyerUID = appFlyerUID;
           console.log(json);
           setData(json);
         }
